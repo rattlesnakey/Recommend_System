@@ -4,13 +4,12 @@
 conda env create -f environment.yaml
 ```
 
-
-
 # File Structure
 
 ```shell
 ├── data
-│   └── train_small.zip
+│   ├── train_small.zip
+│		└── train_big.zip
 ├── accelerate_config.yaml
 ├── environment.yaml
 ├── scripts
@@ -24,7 +23,7 @@ conda env create -f environment.yaml
     └── utils.py
 ```
 
-
+- if you want to use ddp training strategy, you should setup accelerate package first, then fill the corresponding setup in `accelerate_config.yaml`
 
 # Train
 
@@ -40,7 +39,7 @@ EPOCH=2
 LR=0.01
 SEED=3407
 MODEL=xDeepFM
-DATASET_PATH=../data/train_small.zip
+DATASET_PATH=../data/train_small.zip  # train_big.zip
 PATIENCE=5
 RUN_NAME=model=${MODEL}_batch-size=${BATCH_SIZE}_epoch=${EPOCH}_lr=${LR}
 CKPT_PATH=../checkpoints/${RUN_NAME}
@@ -67,8 +66,6 @@ accelerate launch --config_file ../accelerate_config.yaml ../src/train.py \
 # Experiments
 
 > On test dataset
-
-
 
 ## Settings
 
@@ -100,14 +97,28 @@ net = ProXDeepFM(
 ## Results
 
 ```json
+# small dataset 
 {
   'xDeepFM':{
-    'AUC':0.7812395413168691,
-    'Log_loss':0.4645812096766336,
+    'AUC':0.7812,
+    'Log_loss':0.4646,
     }
   'ProXDeepFM':{
-  	'AUC':0.7820685198456263,
-  	'Log_loss':0.46404934289079625
+  	'AUC':0.7821,
+  	'Log_loss':0.4640
+	}
+}
+
+
+# big dataset
+{
+  'xDeepFM':{
+    'AUC':0.8050,
+    'Log_loss':0.4421,
+    }
+  'ProXDeepFM':{
+  	'AUC':0.8058,
+  	'Log_loss':0.4414
 	}
 }
 ```
